@@ -5,8 +5,6 @@ var Feed = require('../models/class.feed.js');
  */
 
 exports.list = function(req, res) {
-    // console.log(Feed);
-    // var feeds = (new Feed()).all();
     var feeds = Feed.all();
     var feed = feeds[0];
     console.log(feed);
