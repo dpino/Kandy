@@ -8,7 +8,7 @@ function Entry(name, url) {
 }
 
 Entry.get = function(id) {
-    return Entry.create("Entry 1", "http://www.entry1.com");
+    return Entry.create("Entry 1", "/view/entry/1");
 }
 
 Entry.prototype.isRead = function() {

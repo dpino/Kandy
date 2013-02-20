@@ -11,15 +11,15 @@ function Feed(name, url) {
 }
 
 Feed.all = function() {
-    return [Feed.create("Feed 1", "http://www.google.com")];
+    return [Feed.create("Feed 1", "/view/feed/1")];
 }
 
 Feed.get = function(id) {
-    var result = Feed.create("Feed 1", "http://www.google.com");
+    var result = Feed.create("Feed 1", "/view/feed/1");
     result.entries = [
-        Entry.create("Entry 1", "http://www.entry1.com"),
-        Entry.create("Entry 2", "http://www.entry2.com"),
-        Entry.create("Entry 3", "http://www.entry3.com"),
+        Entry.create("Entry 1", "/view/entry/1"),
+        Entry.create("Entry 2", "/view/entry/2"),
+        Entry.create("Entry 3", "/view/entry/3"),
     ];
     return result;
 }
