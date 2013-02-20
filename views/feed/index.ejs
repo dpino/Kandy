@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+
+    <link rel="stylesheet" href="css/style.css" type="text/css" />
+</head>
+<body>
+    <h1><a href="<%= feed.url %>"><% feed.name %></a></h1>
+
+    <div style="width: 100%; border: 1px solid black">
+        <ul class="itemlist">
+<%
+            for (var i = 0; i < feed.entries.length; i += 1) {
+                var entry = feed.entries[i];
+                var classRead = entry.read() ? "read" : "";
+%>
+                <li class="<%= classRead %>">
+                    <a href="<%= entry.url %>"><%= entry.name %></a> - 
+                        <span class="summary"><%= entry.summary() %></span>
+                        <span class="date"><%= entry.date() %></span>
+                </li>
+<%
+            }
+%>
+        </ul>
+    </div>
+
+</body>
+</html>

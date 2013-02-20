@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <!--<link media="all" rel="stylesheet" href="css/style.css" type="text/css" />-->
+</head>
+<body>
+    <h1>Google Reader for Kindle</h1>
+
+    <div style="width: 100%; border: 1px solid black">
+        <ul class="itemlist">
+<% 
+        for (var i = 0; i < feeds.length; i += 1) { 
+            var feed = feeds[i]; 
+%>
+            <li><a href="<%= feed.url %>"><%= feed.name %></a></li>
+<% 
+        } 
+%>
+        </ul>
+    </div>
+
+</body>
+</html>
+
+<!--
+            <li><a href="view/feed.html">Coding Horror</a></li>
+            <li><a href="view/feed.html">Facebook Engineering</a></li>
+            <li><a href="view/feed.html">Google Code</a></li>
+            <li><a href="view/feed.html">O'Reilly Radar</a></li>
+            <li><a href="view/feed.html">Planet Mozilla</a></li>
+            <li><a href="view/feed.html">TechCrunch</a></li>
+            <li><a href="view/feed.html">Twitter Engineering</a></li>
+-->

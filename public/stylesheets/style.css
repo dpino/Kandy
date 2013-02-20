@@ -1,8 +1,83 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+html {
+    font-family: "Helvetica" "Arial" "Trebuchet MS"
+    margin: 10px 10px;
 }
 
-a {
-  color: #00B7FF;
+ul.itemlist {
+    list-style-type: none;    
+    font-size: 24px;
+    margin: 0px;  
+    padding: 0px;
+}
+
+ul.itemlist a {
+    margin-left: 5px;
+    color: blue;  
+    font-weight: bold;
+    text-decoration: none;
+}
+
+ul.itemlist li {
+    border-bottom: 1px solid black;  
+}
+
+#authentication-form {
+    border: 1px solid black;
+    padding: 10px;
+    background: #bbb;
+    margin-bottom: 20px;
+}
+
+#authentication-form label + input {
+    display: block;
+}
+
+span.form-title {
+    margin-bottom: 10px;
+    display: block;
+    font-size: 24px;
+}
+
+div.left {
+    float: left;
+    width: 60%;
+}
+
+div.right {
+    float: right;
+}
+
+span.date {
+    margin-top: 10px;
+    float: right;
+    font-size: 14px; 
+    margin-right: 10px;
+}
+
+span.summary {
+    font-size: 16px; 
+    color: #555;
+}
+
+// List-item read
+
+ul.itemlist li.read {
+    color: #999;
+}
+
+ul.itemlist li.read a {
+    color: #999;
+    font-weight: normal;
+}
+
+ul.itemlist li.read > span.summary + span.date  {
+    color: #999;
+}
+
+div.article {
+    font-size: 24px;
+}
+
+article {
+    font-size: 16px;
 }
