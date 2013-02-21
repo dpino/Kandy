@@ -6,19 +6,18 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
 </head>
 <body>
-    <h1><a href="<%= feed.url %>"><%= feed.name %></a></h1>
+    <h1><a href="<%= feed.url() %>"><%= feed.title() %></a></h1>
 
     <div style="width: 100%; border: 1px solid black">
         <ul class="itemlist">
 <%
-            var entries = feed.getEntries();
-            for (var i = 0; i < entries.length; i += 1) {
+            var entries = feed.entries();
+            for (var i = 0; i < entries.length; i++) {
                 var entry = entries[i];
-                var classRead = entry.isRead() ? "read" : "";
+                var classRead = !entry.isFresh() ? "read" : "";
 %>
                 <li class="<%= classRead %>">
-                    <a href="<%= entry.url %>"><%= entry.name %></a> - 
-                        <span class="summary"><%= entry.summary() %></span>
+                    <a href="/view/entry?id=<%= entry.id() %>"><%= entry.title() %></a>
                         <span class="date"><%= entry.date() %></span>
                 </li>
 <%

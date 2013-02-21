@@ -6,10 +6,11 @@ Feed.create = function(id) {
 
 function Feed(id) {
     this._id = id;
+    this._count = 0;
+    this._description = "";
     this._title = "";
     this._url = "";
-    this._count = 0;
-    this._entries = [ ];
+    this._entries = [];
 }
 
 Feed.prototype.id = function(id) {
@@ -17,20 +18,7 @@ Feed.prototype.id = function(id) {
         return this._id;
     }
     this._id = id;
-}
-
-Feed.prototype.title = function(title) {
-    if (title === undefined) {
-        return this._title;
-    }
-    this._title = title;
-}
-
-Feed.prototype.url = function(url) {
-    if (url === undefined) {
-        return this._url;
-    }
-    this._url = url;
+    return this;
 }
 
 Feed.prototype.count = function(count) {
@@ -38,6 +26,39 @@ Feed.prototype.count = function(count) {
         return this._count;
     }
     this._count = count;
+    return this;
+}
+
+Feed.prototype.description = function(description) {
+    if (description === undefined) {
+        return this._description;
+    }
+    this._description = description;
+    return this;
+}
+
+Feed.prototype.title = function(title) {
+    if (title === undefined) {
+        return this._title;
+    }
+    this._title = title;
+    return this;
+}
+
+Feed.prototype.entries = function(entries) {
+    if (entries === undefined) {
+        return this._entries;
+    }
+    this._entries = entries;
+    return this;
+}
+
+Feed.prototype.url = function(url) {
+    if (url === undefined) {
+        return this._url;
+    }
+    this._url = url;
+    return this;
 }
 
 Feed.all = function() {
@@ -137,12 +158,23 @@ Feed.allUnreadUserFeeds = function() {
 }
 
 Feed.get = function(id) {
-    var result = Feed.create("Feed 1", "/view/feed/1");
-    result.entries = [
-        Entry.create("Entry 1", "/view/entry/1"),
-        Entry.create("Entry 2", "/view/entry/2"),
-        Entry.create("Entry 3", "/view/entry/3"),
-    ];
+    return getFeedDetails(id);
+}
+
+function getFeedDetails(id) {
+    var feed = require('./feed-entries.json');
+
+    var result = Feed.create(feed.id).
+        title(feed.title).
+        description(feed.description).
+        url(feed.alternate[0].href);
+
+    var entries = [];
+    feed.items.forEach(function(item) {
+        entries.push(Entry.create(item));
+    });
+    result.entries(entries);
+
     return result;
 }
 
