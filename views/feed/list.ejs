@@ -13,8 +13,15 @@
 <% 
         for (var i = 0; i < feeds.length; i += 1) { 
             var feed = feeds[i]; 
+            if (feed === undefined) { continue; }
+            if (feed.title() == "") { 
+                continue; 
+            }
 %>
-            <li><a href="<%= feed.url %>"><%= feed.name %></a></li>
+            <li>
+                <a href="/view/feed?id=<%= feed.id() %>"><%= feed.title() %></a>
+                <span style="float: right"><%= feed.count() %> new</span>
+            </li>
 <% 
         } 
 %>
@@ -23,13 +30,3 @@
 
 </body>
 </html>
-
-<!--
-            <li><a href="view/feed.html">Coding Horror</a></li>
-            <li><a href="view/feed.html">Facebook Engineering</a></li>
-            <li><a href="view/feed.html">Google Code</a></li>
-            <li><a href="view/feed.html">O'Reilly Radar</a></li>
-            <li><a href="view/feed.html">Planet Mozilla</a></li>
-            <li><a href="view/feed.html">TechCrunch</a></li>
-            <li><a href="view/feed.html">Twitter Engineering</a></li>
--->

@@ -29,7 +29,7 @@ app.configure('development', function(){
 });
 
 app.get('/view/feeds', feed.list);
-app.get('/view/feed/:id', feed.get);
+app.get('/view/feed', feed.get);
 app.get('/view/entry/:id', entry.get);
 
 http.createServer(app).listen(app.get('port'), function(){

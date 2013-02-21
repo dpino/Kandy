@@ -9,7 +9,7 @@ exports.list = function(req, res) {
 }
 
 exports.get = function(req, res) {
-    var id = req.params.id;
+    var id = req.query["id"];
 
     res.render('feed/index', { feed: Feed.get(id)});
 }
