@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<body>
+
+    <h1>Google Reader for Kindle</h1>
+
+    <div>
+        <div class="left">
+            <p>This an unofficial Google Reader application for Kindle.</p>
+            <p>None of your Google credentials or any other information will be saved by this application.</p>
+            <p>You can checkout the source code for this application <a href="http://www.github.com/dpino/greader4kindle">here</a>.</p>
+            <p>Current version: 0.1</p>
+        </div>
+        <div class="right">
+            <form id="authentication-form" action="/authenticate">
+<%
+            if (loginError) {
+%>
+                <span class="error"><%= loginError %></span>           
+<%
+            }
+%>
+                <span class="form-title">Sign in</span>
+                <label for="username">Username</label>
+                <input type="text" name="username"/>
+                <label for="password">Password</label>
+                <input type="password" name="password"/>
+                <br/>
+                <input type="submit" value="Sign in"/>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
