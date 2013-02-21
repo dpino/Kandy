@@ -10,12 +10,15 @@ function Entry(gEntry) {
     this._url = gEntry.origin ? gEntry.origin.htmlUrl : "";
     this._tstamp = gEntry.updated;
     this._summary = gEntry.summary ? gEntry.summary.content : "";
-    this._isFresh = function(categories) {
-        for (var i = 0; i < categories.length; i++) {
-            if (categories[i].match(/fresh$/)) { return true; }
-        }
-        return false;
-    }(gEntry.categories);
+    this._isFresh = getIsFresh(gEntry.categories);
+}
+
+function getIsFresh(categories) {
+    if (categories === undefined) return false;
+    for (var i = 0; i < categories.length; i++) {
+        if (categories[i].match(/fresh$/)) { return true; }
+    }
+    return false;
 }
 
 Entry.prototype.id = function(id) {
