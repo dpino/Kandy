@@ -30,7 +30,7 @@ app.configure('development', function(){
 
 app.get('/view/feeds', feed.list);
 app.get('/view/feed', feed.get);
-app.get('/view/entry/:id', entry.get);
+app.get('/view/entry', entry.get);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));

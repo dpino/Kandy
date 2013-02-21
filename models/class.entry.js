@@ -21,6 +21,14 @@ function getIsFresh(categories) {
     return false;
 }
 
+Entry.get = function(id) {
+    var gEntry = require('./single-entry.json');
+    var result = Entry.create(gEntry);
+    console.log(gEntry);
+    result.summary(gEntry.items[0].summary.content);
+    return result;
+}
+
 Entry.prototype.id = function(id) {
     if (id === undefined) {
         return this._id;
