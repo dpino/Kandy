@@ -28,6 +28,7 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
+app.get('/', index.login);
 app.get('/view/feeds', feed.list);
 app.get('/view/feed', feed.get);
 app.get('/view/entry', entry.get);
