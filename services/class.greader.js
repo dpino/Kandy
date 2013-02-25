@@ -1,5 +1,6 @@
 var request = require('request'),
     assert = require('assert'),
+    async = require('async'),
     Feed = require('../models/class.feed.js'),
     Entry = require('../models/class.entry.js');
 
@@ -56,29 +57,91 @@ GReader.getSessionToken = function(auth, cb) {
     });
 }
 
-GReader.getFeeds = function() {
-    return getAllUnreadSubscriptionFeeds();
+GReader.setSessionToken = function(token) {
+    this.sessionToken = token;
 }
 
-function getAllUnreadSubscriptionFeeds() {
-    var allFeeds = hashAllFeeds();
+GReader.setAuthToken = function(token) {
+    this.authToken = token;
+}
 
-    var unreadFeeds = getUnreadFeeds();
-    for (var i = 0; i < unreadFeeds.length; i += 1) {
-        var unreadFeed = unreadFeeds[i];
-        if (unreadFeed === undefined) {
-            continue;
-        }
-        var feed = allFeeds[unreadFeed.id()];
-        if (feed === undefined) {
-            continue;
-        }
-        unreadFeed.title(feed.title);
-        unreadFeed.url(feed.url);
+GReader.getFeeds = function(cb) {
+    getAllUnreadSubscriptionFeeds(cb);
+}
 
-        unreadFeeds[i] = unreadFeed;
+function getAllUnreadSubscriptionFeeds(cb) {
+    var allFeeds, unreadFeeds;
+
+    async.series([
+            function(callback) {
+                var url = 'https://www.google.com/reader/api/0/subscription/list?output=json&token=' + GReader.sessionToken;
+                request({
+                    url: url,
+                    headers: { 'Authorization': 'GoogleLogin auth=' + GReader.authToken }
+                }, function(err, res, body) {
+                    assert.equal(err, null);
+                    allFeeds = hashAllFeeds(body);
+                    callback();
+                });
+            },
+            function(callback) {
+                request({
+                    url: 'https://www.google.com/reader/api/0/unread-count?output=json&all=true&token=' + GReader.sessionToken,
+                    headers: { 'Authorization': 'GoogleLogin auth=' + GReader.authToken }
+                }, function(err, res, body) {
+                    assert.equal(err, null);
+                    unreadFeeds = getUnreadFeeds(body);
+                    callback();
+                });
+            }
+    ], function (err, result) {
+        for (var i = 0; i < unreadFeeds.length; i += 1) {
+            var unreadFeed = unreadFeeds[i];
+            if (unreadFeed === undefined) {
+                continue;
+            }
+            var feed = allFeeds[unreadFeed.id()];
+            if (feed === undefined) {
+                continue;
+            }
+            unreadFeed.title(feed.title);
+            unreadFeed.url(feed.url);
+
+            unreadFeeds[i] = unreadFeed;
+        }
+        cb(sortFeedsByTitle(unreadFeeds));
+    });
+
+}
+
+function hashAllFeeds(body) {
+    var result = [];
+
+    if (body.length == 0) return result;
+    body = JSON.parse(body);
+    for (var i = 0; i < body.subscriptions.length; i++) {
+        var feed = body.subscriptions[i];
+        result[feed.id] = {
+            id: feed.id,
+            title: feed.title,
+            url: feed.htmlUrl
+        }
     }
-    return sortFeedsByTitle(unreadFeeds);
+    return result;
+}
+
+function getUnreadFeeds(body) {
+    var result = [];
+
+    if (body.length == 0) return result;
+    body = JSON.parse(body);
+    for (var i = 0; i < body.unreadcounts.length; i += 1) {
+        var feed = body.unreadcounts[i];
+        var newFeed = Feed.create(feed.id)
+        newFeed.count(feed.count);
+        result.push(newFeed);
+    }
+    return result;
 }
 
 function sortFeedsByTitle(feeds) {
@@ -114,36 +177,6 @@ function toHashIndexedByTitle(array) {
     for (var i = 0; i < array.length; i += 1) {
         var feed = array[i];
         result[feed.title()] = feed;
-    }
-    return result;
-}
-
-function hashAllFeeds() {
-    var result = [];
-
-    var allFeeds = require('./all-subscriptions.json');
-    var subscriptions = allFeeds.subscriptions;
-    for (var i = 0; i < subscriptions.length; i += 1) {
-        var feed = subscriptions[i];
-        result[feed.id] = {
-            id: feed.id,
-            title: feed.title,
-            url: feed.htmlUrl
-        }
-    }
-    return result;
-}
-
-function getUnreadFeeds() {
-    var result = [];
-
-    var feeds = require('./unread-subscriptions.json');
-    var unreadFeeds = feeds.unreadcounts;
-    for (var i = 0; i < unreadFeeds.length; i += 1) {
-        var feed = unreadFeeds[i];
-        var newFeed = Feed.create(feed.id)
-        newFeed.count(feed.count);
-        result.push(newFeed);
     }
     return result;
 }

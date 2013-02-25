@@ -5,7 +5,9 @@ var Feed = require('../models/class.feed.js');
  */
 
 exports.list = function(req, res) {
-    res.render('feed/list', { feeds: Feed.all() });
+    Feed.all(function(feeds) {
+        res.render('feed/list', { feeds: feeds });
+    });
 }
 
 exports.get = function(req, res) {

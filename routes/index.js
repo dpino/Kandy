@@ -15,6 +15,8 @@ exports.authenticate = function(req, res) {
         if (tokens != null) {
             GReader.getSessionToken(tokens.Auth, function(token) {
                 if (token != null) {
+                    GReader.setAuthToken(tokens.Auth);
+                    GReader.setSessionToken(token);
                     req.session.token = token;
                     res.redirect('/view/feeds');
                 } else {

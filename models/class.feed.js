@@ -62,9 +62,9 @@ Feed.prototype.url = function(url) {
     return this;
 }
 
-Feed.all = function() {
+Feed.all = function(cb) {
     var GReader = require('../services/class.greader.js');
-    return GReader.getFeeds();
+    GReader.getFeeds(cb);
 }
 
 Feed.allUnreadUserFeeds = function() {
