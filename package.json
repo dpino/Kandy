@@ -9,7 +9,7 @@
     "express": "3.1.0",
     "jade": "*",
     "ejs": "0.8.3",
-    "async": "*",
+    "async": "0.1.18",
     "dateformat": "*"
   },
   "engines": {
