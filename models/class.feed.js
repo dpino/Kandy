@@ -1,6 +1,3 @@
-var GReader = require('../services/class.greader.js'),
-    Entry = require("./class.entry.js");
-
 Feed.create = function(id) {
     return new Feed(id);
 }
@@ -63,8 +60,11 @@ Feed.prototype.url = function(url) {
 }
 
 Feed.all = function(cb) {
-    var GReader = require('../services/class.greader.js');
-    GReader.getFeeds(cb);
+    Feed.GReader().getFeeds(cb);
+}
+
+Feed.GReader = function() {
+    return require('../services/class.greader.js');
 }
 
 Feed.allUnreadUserFeeds = function() {
@@ -72,7 +72,7 @@ Feed.allUnreadUserFeeds = function() {
 }
 
 Feed.get = function(id) {
-    return GReader.getFeed(id);
+    Feed.GReader().getFeed(id);
 }
 
 module.exports = Feed;
