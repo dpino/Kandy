@@ -15,6 +15,8 @@ exports.authenticate = function(req, res) {
         if (tokens != null) {
             GReader.getSessionToken(tokens.Auth, function(token) {
                 if (token != null) {
+                    console.log("authToken: " + tokens.Auth);
+                    console.log("sessionToken: " + token);
                     GReader.setAuthToken(tokens.Auth);
                     GReader.setSessionToken(token);
                     req.session.token = token;

@@ -141,7 +141,7 @@ function getUnreadFeeds(body) {
     var result = [];
 
     if (body.length == 0) return result;
-    console.log(body);
+    // console.log(body);
     body = JSON.parse(body);
     for (var i = 0; i < body.unreadcounts.length; i += 1) {
         var feed = body.unreadcounts[i];
