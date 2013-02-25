@@ -25,9 +25,8 @@ app.configure(function(){
   // Support sessions
   app.use(express.cookieParser());
   var store  = new express.session.MemoryStore;
-  var secret = require('./.secret.json')
   app.use(express.session({
-      secret: secret.key, 
+      secret: process.env.SESSION_STORE_SECRET, 
       store: store
   }));
 
