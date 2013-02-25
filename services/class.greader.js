@@ -194,10 +194,10 @@ GReader.getFeed = function(id, cb) {
 
 function getFeedDetails(body) {
     var feed = JSON.parse(body);
-    var result = Feed.create(feed.id).
-        title(feed.title).
-        description(feed.description).
-        url(feed.alternate[0].href);
+    var result = Feed.create(feed.id)
+            .title(feed.title)
+            .description(feed.description)
+            .url(feed.alternate[0] ? feed.alternate[0].href : "");
 
     var entries = [];
     feed.items.forEach(function(item) {
