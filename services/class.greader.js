@@ -208,11 +208,28 @@ function getFeedDetails(body) {
     return result;
 }
 
-GReader.getEntry = function (id) {
-    var gEntry = require('./single-entry.json');
-    var result = Entry.create(gEntry);
-    result.summary(gEntry.items[0].summary.content);
-    return result;
+GReader.getEntry = function (id, cb) {
+    var url = 'https://www.google.com/reader/api/0/stream/items/contents?i=' + id + '&token=' + GReader.sessionToken;
+    request({
+        url: url,
+        headers: { 'Authorization': 'GoogleLogin auth=' + GReader.authToken }
+    }, function(err, res, body) {
+        assert.equal(err, null);
+        var gEntry = JSON.parse(body);
+        var entry = Entry.create(gEntry);
+        entry.summary(getContent(gEntry.items[0]));
+        cb(entry);
+    });
+
+}
+
+function getContent(item) {
+    if (item.summary) {
+        return item.summary.content;
+    }
+    if (item.content) {
+        return item.content.content;
+    }
 }
 
 module.exports = GReader;

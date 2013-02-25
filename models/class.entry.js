@@ -21,8 +21,12 @@ function getIsFresh(categories) {
     return false;
 }
 
-Entry.get = function(id) {
-    return GReader.getEntry(id);
+Entry.get = function(id, cb) {
+    return Entry.GReader().getEntry(id, cb);
+}
+
+Entry.GReader = function() {
+    return require('../services/class.greader.js');
 }
 
 Entry.prototype.id = function(id) {
