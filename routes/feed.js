@@ -11,7 +11,9 @@ exports.list = function(req, res) {
 }
 
 exports.get = function(req, res) {
-    var id = req.query["id"];
+    var id = req.query['id'];
 
-    res.render('feed/index', { feed: Feed.get(id)});
+    Feed.get(id, function(feed) {
+        res.render('feed/index', { feed: feed });
+    });
 }

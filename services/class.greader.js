@@ -181,13 +181,19 @@ function toHashIndexedByTitle(array) {
     return result;
 }
 
-GReader.getFeed = function(id) {
-    return getFeedDetails(id);    
+GReader.getFeed = function(id, cb) {
+    var url = 'https://www.google.com/reader/api/0/stream/contents/' + id + '?r=n&n=20&token=' + GReader.sessionToken;
+    request({
+        url: url,
+        headers: { 'Authorization': 'GoogleLogin auth=' + GReader.authToken }
+    }, function(err, res, body) {
+        assert.equal(err, null);
+        cb(getFeedDetails(body));
+    });
 }
 
-function getFeedDetails(id) {
-    var feed = require('./feed-entries.json');
-
+function getFeedDetails(body) {
+    var feed = JSON.parse(body);
     var result = Feed.create(feed.id).
         title(feed.title).
         description(feed.description).

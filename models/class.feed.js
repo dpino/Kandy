@@ -71,8 +71,8 @@ Feed.allUnreadUserFeeds = function() {
 
 }
 
-Feed.get = function(id) {
-    Feed.GReader().getFeed(id);
+Feed.get = function(id, cb) {
+    Feed.GReader().getFeed(id, cb);
 }
 
 module.exports = Feed;
