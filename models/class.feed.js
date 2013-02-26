@@ -1,5 +1,28 @@
+var Entry = require("./class.entry.js");
+
 Feed.create = function(id) {
     return new Feed(id);
+}
+
+Feed.createFromGoogle = function(gFeed) {
+    var feed = new Feed(gFeed.id);
+
+    feed.title(gFeed.title);
+    feed.description(gFeed.description);
+
+    if (gFeed.alternate && gFeed.alternate[0]) {
+        feed.url(gFeed.alternate[0].href);
+    } else {
+        feed.url("");
+    }
+
+    var entries = [];
+    gFeed.items.forEach(function(gItem) {
+        entries.push(Entry.create(gItem));
+    });
+    feed.entries(entries);
+
+    return feed;
 }
 
 function Feed(id) {

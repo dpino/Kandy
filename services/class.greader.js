@@ -156,19 +156,8 @@ function getFeedContentsURI(feed_id) {
 }
 
 function getFeedDetails(body) {
-    var feed = JSON.parse(body);
-    var result = Feed.create(feed.id)
-            .title(feed.title)
-            .description(feed.description)
-            .url(feed.alternate[0] ? feed.alternate[0].href : "");
-
-    var entries = [];
-    feed.items.forEach(function(item) {
-        entries.push(Entry.create(item));
-    });
-    result.entries(entries);
-
-    return result;
+    var gFeed = JSON.parse(body);
+    return Feed.createFromGoogle(gFeed);
 }
 
 GReader.getEntry = function (item_id, cb) {
