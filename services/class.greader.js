@@ -74,13 +74,9 @@ function getAllUnreadSubscriptionFeeds(cb) {
 
     async.series([
             function(callback) {
-                console.log("hashAllFeeds");
-                var url = 'https://www.google.com/reader/api/0/subscription/list?output=json&token=' + GReader.sessionToken;
-                console.log("url: " + url);
-                console.log("auth=" + GReader.authToken);
+                var url = 'https://www.google.com/reader/api/0/subscription/list?output=json&access_token=' + GReader.authToken;
                 request({
-                    url: url,
-                    headers: { 'Authorization': 'GoogleLogin auth=' + GReader.authToken }
+                    url: url
                 }, function(err, res, body) {
                     assert.equal(err, null);
                     allFeeds = hashAllFeeds(body);
@@ -88,13 +84,9 @@ function getAllUnreadSubscriptionFeeds(cb) {
                 });
             },
             function(callback) {
-                console.log("getUnreadFeed");
-                var url = 'https://www.google.com/reader/api/0/unread-count?output=json&all=true&token=' + GReader.sessionToken;
-                console.log("url: " + url);
-                console.log("auth=" + GReader.authToken);
+                var url = 'https://www.google.com/reader/api/0/unread-count?output=json&all=true&access_token=' + GReader.authToken;
                 request({
-                    url: url,
-                    headers: { 'Authorization': 'GoogleLogin auth=' + GReader.authToken }
+                    url: url
                 }, function(err, res, body) {
                     assert.equal(err, null);
                     unreadFeeds = getUnreadFeeds(body);
@@ -141,8 +133,8 @@ function getUnreadFeeds(body) {
     var result = [];
 
     if (body.length == 0) return result;
-    // console.log(body);
     body = JSON.parse(body);
+    if (body.unreadcounts == undefined) return result;
     for (var i = 0; i < body.unreadcounts.length; i += 1) {
         var feed = body.unreadcounts[i];
         var newFeed = Feed.create(feed.id)

@@ -14,7 +14,7 @@ var express = require('express')
 var app = express();
 
 app.configure(function(){
-  app.set('port', process.env.PORT || 3000);
+  app.set('port', process.env.PORT || 5000);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'ejs');
   app.use(express.favicon());
@@ -26,7 +26,7 @@ app.configure(function(){
   app.use(express.cookieParser());
   var store  = new express.session.MemoryStore;
   app.use(express.session({
-      secret: process.env.SESSION_STORE_SECRET, 
+      secret: process.env.SESSION_STORE_SECRET || "secretpass", 
       store: store
   }));
 
@@ -39,7 +39,8 @@ app.configure('development', function(){
 });
 
 app.get('/', index.login);
-app.get('/authenticate', index.authenticate);
+app.get('/authentication', index.authentication);
+app.get('/oauth2callback', index.oauth2callback);
 app.get('/view/feeds', feed.list);
 app.get('/view/feed', feed.get);
 app.get('/view/entry', entry.get);
