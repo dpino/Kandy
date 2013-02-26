@@ -13,10 +13,6 @@
 <% 
         for (var i = 0; i < feeds.length; i += 1) { 
             var feed = feeds[i]; 
-            if (feed === undefined) { continue; }
-            if (feed.title() == "") { 
-                continue; 
-            }
 %>
             <li>
                 <a href="/view/feed?id=<%= encodeURIComponent(feed.id()) %>"><%= feed.shortTitle() %></a>

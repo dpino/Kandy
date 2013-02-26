@@ -46,23 +46,30 @@ function getAllUnreadSubscriptionFeeds(cb) {
                 });
             }
     ], function (err, result) {
-        for (var i = 0; i < unreadFeeds.length; i += 1) {
-            var unreadFeed = unreadFeeds[i];
-            if (unreadFeed === undefined) {
-                continue;
-            }
+        var toBeRemoved = [], i = 0;
+        unreadFeeds.forEach(function(unreadFeed, i) {
             var feed = allFeeds[unreadFeed.id()];
-            if (feed === undefined) {
-                continue;
+            if (feed != null) {
+                unreadFeed.title(feed.title);
+                unreadFeed.url(feed.url);
+            } else {
+                toBeRemoved.push(i);
             }
-            unreadFeed.title(feed.title);
-            unreadFeed.url(feed.url);
-
-            unreadFeeds[i] = unreadFeed;
-        }
+        });
+        removeElements(unreadFeeds, toBeRemoved);
         cb(sortFeedsByTitle(unreadFeeds));
     });
 
+}
+
+// Moves elements to be removed to the beginning of the array 
+// and splice it from 0 until the number of elements moved
+function removeElements(array, positions) {
+    var pos = 0;
+    positions.forEach(function(i) {
+        array[i] = array[pos++];
+    });
+    array.splice(0, pos);
 }
 
 function getSubscriptionListURI() {
