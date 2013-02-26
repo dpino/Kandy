@@ -4,57 +4,11 @@ var request = require('request'),
     Feed = require('../models/class.feed.js'),
     Entry = require('../models/class.entry.js');
 
-var CLIENT_LOGIN = "https://www.google.com/accounts/ClientLogin",
-    TOKEN_URL = 'https://www.google.com/reader/api/0/token',
-    SERVICE = "reader",
+var SERVICE = "reader",
     SOURCE = "greader4kindle";
 
 function GReader() {
 
-}
-
-GReader.authenticate = function(username, password, cb) {
-    request.post({
-        uri: CLIENT_LOGIN,
-        form: {
-            Email: username,
-            Passwd: password,
-            service: SERVICE,
-            source: SOURCE,
-        }
-    }, function(err, res, body) {
-        assert.equal(err, null);
-        var tokens = getAuthenticationTokens(body);
-        cb(tokens);
-    });
-}
-
-function getAuthenticationTokens(body) {
-    var result = {
-        SID: "",
-        LSID: "",
-        Auth: "",
-    }       
-
-    var tokens = body.split("\n");
-    var i = 0;
-    for (var token in result) {
-        var parts = tokens[i++].split("=");
-        if (parts.length) {
-            result[token] = parts[1];
-        }
-    }
-    return result;
-}
-
-GReader.getSessionToken = function(auth, cb) {
-    request({
-        url: TOKEN_URL,
-        headers: { 'Authorization': 'GoogleLogin auth=' + auth }
-    }, function(err, res, body) {
-        assert.equal(err, null);
-        cb(body);
-    });
 }
 
 GReader.setSessionToken = function(token) {
