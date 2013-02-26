@@ -19,7 +19,7 @@
             }
 %>
             <li>
-                <a href="/view/feed?id=<%= feed.id() %>"><%= feed.title() %></a>
+                <a href="/view/feed?id=<%= encodeURIComponent(feed.id()) %>"><%= feed.title() %></a>
                 <span class="small-info"><%= feed.count() %> new</span>
             </li>
 <% 
