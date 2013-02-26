@@ -66,6 +66,11 @@ Feed.prototype.title = function(title) {
     return this;
 }
 
+Feed.prototype.shortTitle = function() {
+    return this._title && this._title.length > 34 ? 
+        this._title.substr(0, 31) + "..." : this._title;
+};
+
 Feed.prototype.entries = function(entries) {
     if (entries === undefined) {
         return this._entries;

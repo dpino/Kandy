@@ -43,6 +43,11 @@ Entry.prototype.title = function(title) {
     this._title = title;
 }
 
+Entry.prototype.shortTitle = function() {
+    return this._title && this._title.length > 34 ? 
+        this._title.substr(0, 31) + "..." : this._title;
+};
+
 Entry.prototype.url = function(url) {
     if (url === undefined) {
         return this._url;
