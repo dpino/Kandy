@@ -182,10 +182,9 @@ function toHashIndexedByTitle(array) {
 }
 
 GReader.getFeed = function(id, cb) {
-    var url = 'https://www.google.com/reader/api/0/stream/contents/' + id + '?r=n&n=20&token=' + GReader.sessionToken;
+    var url = 'https://www.google.com/reader/api/0/stream/contents/' + id + '?r=n&n=20&access_token=' + GReader.accessToken;
     request({
-        url: url,
-        headers: { 'Authorization': 'GoogleLogin auth=' + GReader.authToken }
+        url: url
     }, function(err, res, body) {
         assert.equal(err, null);
         cb(getFeedDetails(body));
@@ -209,10 +208,9 @@ function getFeedDetails(body) {
 }
 
 GReader.getEntry = function (id, cb) {
-    var url = 'https://www.google.com/reader/api/0/stream/items/contents?i=' + id + '&token=' + GReader.sessionToken;
+    var url = 'https://www.google.com/reader/api/0/stream/items/contents?i=' + id + '&access_token=' + GReader.accessToken;
     request({
-        url: url,
-        headers: { 'Authorization': 'GoogleLogin auth=' + GReader.authToken }
+        url: url
     }, function(err, res, body) {
         assert.equal(err, null);
         var gEntry = JSON.parse(body);
