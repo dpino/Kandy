@@ -38,7 +38,7 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-app.get('/', index.login);
+app.get('/', index.welcome);
 app.get('/authentication', index.authentication);
 app.get('/oauth2callback', index.oauth2callback);
 app.get('/view/feeds', feed.list);

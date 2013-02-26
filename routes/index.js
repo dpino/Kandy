@@ -3,11 +3,12 @@ var GReader =   require('../services/class.greader.js'),
 
 var GOOGLE_READER_API_URL = "http://www.google.com/reader/api/";
 
-exports.login = function(req, res) {
-    if (req.query['loginError'] == "true") {
-        res.render('login', {loginError: "Authentication failed. Try again"});
+exports.welcome = function(req, res) {
+    if (req.session.access_token) {
+        return res.redirect('/view/feeds');
+    } else {
+        res.render('welcome');
     }
-    res.render('login', {loginError: ""});
 }
 
 exports.oauth2callback = function(req, res) {
