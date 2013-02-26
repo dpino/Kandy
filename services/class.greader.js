@@ -28,9 +28,8 @@ function getAllUnreadSubscriptionFeeds(cb) {
 
     async.series([
             function(callback) {
-                var url = 'https://www.google.com/reader/api/0/subscription/list?output=json&access_token=' + GReader.authToken;
                 request({
-                    url: url
+                    url: getSubscriptionListURI()
                 }, function(err, res, body) {
                     assert.equal(err, null);
                     allFeeds = hashAllFeeds(body);
@@ -38,9 +37,8 @@ function getAllUnreadSubscriptionFeeds(cb) {
                 });
             },
             function(callback) {
-                var url = 'https://www.google.com/reader/api/0/unread-count?output=json&all=true&access_token=' + GReader.authToken;
                 request({
-                    url: url
+                    url: getUnreadCountURI()
                 }, function(err, res, body) {
                     assert.equal(err, null);
                     unreadFeeds = getUnreadFeeds(body);
@@ -65,6 +63,14 @@ function getAllUnreadSubscriptionFeeds(cb) {
         cb(sortFeedsByTitle(unreadFeeds));
     });
 
+}
+
+function getSubscriptionListURI() {
+    return 'https://www.google.com/reader/api/0/subscription/list?output=json&access_token=' + GReader.authToken;
+}
+
+function getUnreadCountURI() {
+    return 'https://www.google.com/reader/api/0/unread-count?output=json&all=true&access_token=' + GReader.authToken;
 }
 
 function hashAllFeeds(body) {
@@ -135,14 +141,18 @@ function toHashIndexedByTitle(array) {
     return result;
 }
 
-GReader.getFeed = function(id, cb) {
-    var url = 'https://www.google.com/reader/api/0/stream/contents/' + id + '?r=n&n=20&access_token=' + GReader.accessToken;
+GReader.getFeed = function(feed_id, cb) {
     request({
-        url: url
+        url: getFeedContentsURI(feed_id)
     }, function(err, res, body) {
         assert.equal(err, null);
         cb(getFeedDetails(body));
     });
+}
+
+function getFeedContentsURI(feed_id) {
+    return 'https://www.google.com/reader/api/0/stream/contents/' + 
+                feed_id + '?r=n&n=20&access_token=' + GReader.accessToken;
 }
 
 function getFeedDetails(body) {
@@ -161,10 +171,9 @@ function getFeedDetails(body) {
     return result;
 }
 
-GReader.getEntry = function (id, cb) {
-    var url = 'https://www.google.com/reader/api/0/stream/items/contents?i=' + id + '&access_token=' + GReader.accessToken;
+GReader.getEntry = function (item_id, cb) {
     request({
-        url: url
+        url: getItemContentsURI(item_id)
     }, function(err, res, body) {
         assert.equal(err, null);
         var gEntry = JSON.parse(body);
@@ -173,6 +182,11 @@ GReader.getEntry = function (id, cb) {
         cb(entry);
     });
 
+}
+
+function getItemContentsURI(item_id) {
+    return 'https://www.google.com/reader/api/0/stream/items/contents?i=' + 
+                item_id + '&access_token=' + GReader.accessToken;
 }
 
 function getContent(item) {
