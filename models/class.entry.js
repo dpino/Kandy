@@ -7,10 +7,18 @@ Entry.create = function(gEntry) {
 function Entry(gEntry) {
     this._id = gEntry.id;
     this._title = gEntry.title;
-    this._url = gEntry.origin ? gEntry.origin.htmlUrl : "";
+    this._url = getUrlFor(gEntry);
     this._tstamp = gEntry.updated;
     this._summary = gEntry.summary ? gEntry.summary.content : "";
     this._isFresh = getIsFresh(gEntry.categories);
+}
+
+function getUrlFor(gEntry) {
+    if (gEntry.items && gEntry.items.length > 0) {
+        var alternate = gEntry.items[0].alternate;
+        if (alternate) return alternate[0].href;
+    }
+    return "";
 }
 
 function getIsFresh(categories) {
