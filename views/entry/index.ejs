@@ -6,13 +6,15 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
 </head>
 <body>
-    <article>
-        <h1><a href="<%= entry.url() %>"><%- entry.title() %> »</a></h1>
+    <div class="article" style="margin: 0px 30px">
+        <h1 style="margin-bottom: -15px">
+            <a href="<%= entry.url() %>"><%- entry.strTitle() %> »</a>
+        </h1>
         <h4>by <%= entry.author() %></h4>
 
         <div>
             <%- entry.summary() %>
         </div>
-    </article>
+    </div>
 </body>
 </html>
