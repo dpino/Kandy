@@ -7,11 +7,10 @@ Entry.create = function(gEntry) {
 function Entry(gEntry) {
     this._id = gEntry.id;
 
-    console.log("gEntry");
-    console.log(gEntry);
     this._author = gEntry.author;
     this._isFresh = getIsFresh(gEntry);
-    this._summary = getContent(gEntry);
+    this._content = getContent(gEntry);
+    this._summary = getSummary(gEntry);
     this._title = gEntry.title ? gEntry.title : "";
     this._tstamp = gEntry.updated;
     this._url = getUrlFor(gEntry);
@@ -22,8 +21,14 @@ function getUrlFor(gEntry) {
 }
 
 function getContent(gEntry) {
-    return gEntry.summary ? gEntry.summary.content :
-        gEntry.content ? gEntry.content.content : "";
+    return gEntry.content ? gEntry.content.content : "";
+}
+
+function getSummary(gEntry) {
+    function stripHtmlTags(text) {
+        return text.replace(/<.*?>/g, '');
+    }
+    return stripHtmlTags(gEntry.summary ? gEntry.summary.content : "");
 }
 
 /**
@@ -100,6 +105,13 @@ Entry.prototype.summary = function(summary) {
         return this._summary;
     }
     this._summary = summary;
+}
+
+Entry.prototype.content = function(content) {
+    if (content === undefined) {
+        return this._content;
+    }
+    this._content = content;
 }
 
 Entry.prototype.isFresh = function(isFresh) {

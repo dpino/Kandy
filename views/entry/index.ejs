@@ -5,16 +5,19 @@
     <title></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
 </head>
+
 <body>
     <div class="article" style="margin: 0px 30px">
         <h1 style="margin-bottom: -15px">
-            <a href="<%= entry.url() %>"><%- entry.strTitle() %> »</a>
+            <a id="link" href="<%= entry.url() %>"><%- entry.title() %> »</a>
         </h1>
         <h4>by <%= entry.author() %></h4>
 
         <div>
-            <%- entry.summary() %>
+            <%- entry.content() %>
         </div>
+
     </div>
 </body>
+
 </html>

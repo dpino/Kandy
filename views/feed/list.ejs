@@ -4,6 +4,20 @@
     <meta charset="UTF-8">
     <title></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+
+    <style type="text/css">
+        #context-menu {
+            padding: 5px 10px;
+            display: none;
+            position: fixed;
+            left: 0px;
+            width: 100%;
+            z-index: 100;
+            background: #aaa;
+            border: 1px solid black; 
+        }
+    </style>
+
 </head>
 <body>
     <h1>Google Reader for Kindle</h1>
@@ -15,7 +29,10 @@
             var feed = feeds[i]; 
 %>
             <li>
-                <a href="/view/feed?id=<%= encodeURIComponent(feed.id()) %>"><%= feed.shortTitle() %></a>
+                <a class="feed-link" href="/view/feed?id=<%= encodeURIComponent(feed.id()) %>"
+                        title="<%= feed.title() %>">
+                    <%= feed.shortTitle() %>
+                </a>
                 <span class="small-info"><%= feed.count() %> new</span>
             </li>
 <% 
@@ -24,5 +41,15 @@
         </ul>
     </div>
 
+    <div id="context-menu"></div>
+
 </body>
+
+<script src="/js/contextmenu.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+    attachContextMenu(getLinks('feed-link'), 
+        new ContextMenu('context-menu'));
+</script>
+
 </html>

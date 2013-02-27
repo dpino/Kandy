@@ -4,6 +4,20 @@
     <meta charset="UTF-8">
     <title></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+
+    <style type="text/css">
+        #context-menu {
+            padding: 5px 10px;
+            display: none;
+            position: fixed;
+            left: 0px;
+            width: 100%;
+            z-index: 100;
+            background: #aaa;
+            border: 1px solid black; 
+        }
+    </style>
+
 </head>
 <body>
     <h1><a href="<%= feed.url() %>"><%- feed.title() %> »</a></h1>
@@ -17,15 +31,12 @@
                 var classRead = !entry.isFresh() ? "read" : "";
 %>
                 <li class="<%= classRead %>">
-                    <a href="/view/entry?id=<%= encodeURIComponent(entry.id()) %>"
-                            title="<%= entry.title() %>">
-<% 
+                    <a class="entry-link" href="/view/entry?id=<%= encodeURIComponent(entry.id()) %>"
+                            title="<%= entry.title() %>" alt="<%= entry.summary() %>"><% 
                     if (entry.title()) { %>
-                        <%= entry.strTitle() %>
-<% 
+                        <%= entry.strTitle() %><% 
                     } else { %>
-                    <i>No title</i>
-<% 
+                        <i>No title</i><% 
                     } 
 %>
                     </a>
@@ -37,5 +48,15 @@
         </ul>
     </div>
 
+    <div id="context-menu"></div>
+
 </body>
+
+<script src="/js/contextmenu.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+    attachContextMenu(getLinks('entry-link'), 
+        new ContextMenu('context-menu'));
+</script>
+
 </html>
