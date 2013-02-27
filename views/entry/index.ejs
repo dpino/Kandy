@@ -6,7 +6,7 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
 </head>
 <body>
-    <h1><a href="<%= entry.url() %>"><%= entry.title() %></a></h1>
+    <h1><a href="<%= entry.url() %>"><%- entry.title() %> »</a></h1>
 
     <div class="article">
         <%- entry.summary() %>
