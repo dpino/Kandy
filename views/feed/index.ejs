@@ -17,8 +17,19 @@
                 var classRead = !entry.isFresh() ? "read" : "";
 %>
                 <li class="<%= classRead %>">
-                    <a href="/view/entry?id=<%= encodeURIComponent(entry.id()) %>"><%= entry.shortTitle() %></a>
-                        <span class="small-info"><%= entry.date() %></span>
+                    <a href="/view/entry?id=<%= encodeURIComponent(entry.id()) %>"
+                            title="<%= entry.title() %>">
+<% 
+                    if (entry.title()) { %>
+                        <%= entry.strTitle() %>
+<% 
+                    } else { %>
+                    <i>No title</i>
+<% 
+                    } 
+%>
+                    </a>
+                    <span class="small-info"><%= entry.date() %></span>
                 </li>
 <%
             }

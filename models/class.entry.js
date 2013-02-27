@@ -9,7 +9,7 @@ function Entry(gEntry) {
 
     this._isFresh = getIsFresh(gEntry);
     this._summary = getContent(gEntry);
-    this._title = gEntry.title;
+    this._title = gEntry.title ? gEntry.title : "";
     this._tstamp = gEntry.updated;
     this._url = getUrlFor(gEntry);
 }
@@ -62,10 +62,14 @@ Entry.prototype.title = function(title) {
     this._title = title;
 }
 
-Entry.prototype.shortTitle = function() {
-    return this._title && this._title.length > 34 ? 
-        this._title.substr(0, 31) + "..." : this._title;
-};
+Entry.prototype.strTitle = function() {
+    var MAX_CHAR_TITLE = 34;
+
+    if (this._title && this._title.length > MAX_CHAR_TITLE) {
+        return this._title.substr(0, MAX_CHAR_TITLE - 3) + "...";
+    }
+    return this._title ? this._title : "<i>No title</i>";
+}
 
 Entry.prototype.url = function(url) {
     if (url === undefined) {
