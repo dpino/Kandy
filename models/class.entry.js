@@ -7,6 +7,9 @@ Entry.create = function(gEntry) {
 function Entry(gEntry) {
     this._id = gEntry.id;
 
+    console.log("gEntry");
+    console.log(gEntry);
+    this._author = gEntry.author;
     this._isFresh = getIsFresh(gEntry);
     this._summary = getContent(gEntry);
     this._title = gEntry.title ? gEntry.title : "";
@@ -53,6 +56,13 @@ Entry.prototype.id = function(id) {
         return this._id;
     }
     this._id = id;
+}
+
+Entry.prototype.author = function(author) {
+    if (author === undefined) {
+        return this._author;
+    }
+    this._author = author;
 }
 
 Entry.prototype.title = function(title) {
