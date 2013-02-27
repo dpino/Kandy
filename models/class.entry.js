@@ -6,19 +6,21 @@ Entry.create = function(gEntry) {
 
 function Entry(gEntry) {
     this._id = gEntry.id;
-    this._title = gEntry.title;
-    this._url = getUrlFor(gEntry);
-    this._tstamp = gEntry.updated;
-    this._summary = gEntry.summary ? gEntry.summary.content : "";
+
     this._isFresh = getIsFresh(gEntry);
+    this._summary = getContent(gEntry);
+    this._title = gEntry.title;
+    this._tstamp = gEntry.updated;
+    this._url = getUrlFor(gEntry);
 }
 
 function getUrlFor(gEntry) {
-    if (gEntry.items && gEntry.items.length > 0) {
-        var alternate = gEntry.items[0].alternate;
-        if (alternate) return alternate[0].href;
-    }
-    return "";
+    return gEntry.alternate ? gEntry.alternate[0].href : "";
+}
+
+function getContent(gEntry) {
+    return gEntry.summary ? gEntry.summary.content :
+        gEntry.content ? gEntry.content.content : "";
 }
 
 /**

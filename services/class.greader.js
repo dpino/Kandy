@@ -172,26 +172,22 @@ GReader.getEntry = function (item_id, cb) {
         url: getItemContentsURI(item_id)
     }, function(err, res, body) {
         assert.equal(err, null);
-        var gEntry = JSON.parse(body);
-        var entry = Entry.create(gEntry);
-        entry.summary(getContent(gEntry.items[0]));
-        cb(entry);
+        cb(getEntry(JSON.parse(body)));
     });
+
+    function getEntry(gFeed) {
+        var result = {};
+        if (gFeed.items && gFeed.items.length > 0) {
+            result = Entry.create(gFeed.items[0]);
+        }
+        return result;
+    }
 
 }
 
 function getItemContentsURI(item_id) {
     return 'https://www.google.com/reader/api/0/stream/items/contents?i=' + 
                 item_id + '&access_token=' + GReader.accessToken;
-}
-
-function getContent(item) {
-    if (item.summary) {
-        return item.summary.content;
-    }
-    if (item.content) {
-        return item.content.content;
-    }
 }
 
 module.exports = GReader;
