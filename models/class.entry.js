@@ -10,7 +10,7 @@ function Entry(gEntry) {
     this._url = getUrlFor(gEntry);
     this._tstamp = gEntry.updated;
     this._summary = gEntry.summary ? gEntry.summary.content : "";
-    this._isFresh = getIsFresh(gEntry.categories);
+    this._isFresh = getIsFresh(gEntry);
 }
 
 function getUrlFor(gEntry) {
@@ -21,12 +21,21 @@ function getUrlFor(gEntry) {
     return "";
 }
 
-function getIsFresh(categories) {
-    if (categories === undefined) return false;
-    for (var i = 0; i < categories.length; i++) {
-        if (categories[i].match(/fresh$/)) { return true; }
+/**
+ * FIXME:
+ * Supposedly when an item is fresh it has a tag 'fresh' on its categories, but it's not correct
+ * Still trying to figure out how to know if an item is fresh so temporarily leave it 'fresh' always
+ */
+function getIsFresh(gEntry) {
+    /*
+    if (gEntry.categories) {
+        gEntry.categories.forEach(function(category) {
+            if (category.match(/fresh$/)) return true;
+        });
     }
     return false;
+    */
+    return true;
 }
 
 Entry.get = function(id, cb) {
