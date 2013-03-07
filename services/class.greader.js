@@ -4,32 +4,25 @@ var request = require('request'),
     Feed = require('../models/class.feed.js'),
     Entry = require('../models/class.entry.js');
 
-var SERVICE = "reader",
-    SOURCE = "greader4kindle";
-
-function GReader() {
-
+function GReader(session) {
+    this.accessToken = session.accessToken;
+    this.refreshToken = session.refreshToken;  
 }
 
-GReader.setSessionToken = function(token) {
-    this.sessionToken = token;
+GReader.prototype.getFeeds = function(cb) {
+    this.getAllUnreadSubscriptionFeeds(cb);
 }
 
-GReader.setAuthToken = function(token) {
-    this.authToken = token;
-}
-
-GReader.getFeeds = function(cb) {
-    getAllUnreadSubscriptionFeeds(cb);
-}
-
-function getAllUnreadSubscriptionFeeds(cb) {
+GReader.prototype.getAllUnreadSubscriptionFeeds = function(cb) {
     var allFeeds, unreadFeeds;
+
+    var subscriptionListURI = this.getSubscriptionListURI();
+    var getUnreadCountURI = this.getUnreadCountURI();
 
     async.series([
             function(callback) {
                 request({
-                    url: getSubscriptionListURI()
+                    url: subscriptionListURI
                 }, function(err, res, body) {
                     assert.equal(err, null);
                     allFeeds = hashAllFeeds(body);
@@ -38,7 +31,7 @@ function getAllUnreadSubscriptionFeeds(cb) {
             },
             function(callback) {
                 request({
-                    url: getUnreadCountURI()
+                    url: getUnreadCountURI
                 }, function(err, res, body) {
                     assert.equal(err, null);
                     unreadFeeds = getUnreadFeeds(body);
@@ -72,12 +65,12 @@ function removeElements(array, positions) {
     array.splice(0, pos);
 }
 
-function getSubscriptionListURI() {
-    return 'https://www.google.com/reader/api/0/subscription/list?output=json&access_token=' + GReader.authToken;
+GReader.prototype.getSubscriptionListURI = function() {
+    return 'https://www.google.com/reader/api/0/subscription/list?output=json&access_token=' + this.accessToken;
 }
 
-function getUnreadCountURI() {
-    return 'https://www.google.com/reader/api/0/unread-count?output=json&all=true&access_token=' + GReader.authToken;
+GReader.prototype.getUnreadCountURI = function() {
+    return 'https://www.google.com/reader/api/0/unread-count?output=json&all=true&access_token=' + this.accessToken;
 }
 
 function hashAllFeeds(body) {
@@ -148,18 +141,18 @@ function toHashIndexedByTitle(array) {
     return result;
 }
 
-GReader.getFeed = function(feed_id, cb) {
+GReader.prototype.getFeed = function(feed_id, cb) {
     request({
-        url: getFeedContentsURI(feed_id)
+        url: this.getFeedContentsURI(feed_id )
     }, function(err, res, body) {
         assert.equal(err, null);
         cb(getFeedDetails(body));
     });
 }
 
-function getFeedContentsURI(feed_id) {
+GReader.prototype.getFeedContentsURI = function(feed_id) {
     return 'https://www.google.com/reader/api/0/stream/contents/' + 
-                feed_id + '?r=n&n=20&access_token=' + GReader.accessToken;
+                feed_id + '?r=n&n=20&access_token=' + this.accessToken;
 }
 
 function getFeedDetails(body) {
@@ -167,9 +160,9 @@ function getFeedDetails(body) {
     return Feed.createFromGoogle(gFeed);
 }
 
-GReader.getEntry = function (item_id, cb) {
+GReader.prototype.getEntry = function (item_id, cb) {
     request({
-        url: getItemContentsURI(item_id)
+        url: this.getItemContentsURI(item_id)
     }, function(err, res, body) {
         assert.equal(err, null);
         cb(getEntry(JSON.parse(body)));
@@ -185,9 +178,9 @@ GReader.getEntry = function (item_id, cb) {
 
 }
 
-function getItemContentsURI(item_id) {
+GReader.prototype.getItemContentsURI = function(entryId)  {
     return 'https://www.google.com/reader/api/0/stream/items/contents?i=' + 
-                item_id + '&access_token=' + GReader.accessToken;
+                entryId + '&access_token=' + GReader.accessToken;
 }
 
 module.exports = GReader;

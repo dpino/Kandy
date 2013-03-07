@@ -48,12 +48,13 @@ function getIsFresh(gEntry) {
     return true;
 }
 
-Entry.get = function(id, cb) {
-    return Entry.GReader().getEntry(id, cb);
+Entry.get = function(id, session, cb) {
+    return Entry.GReader(session).getEntry(id, cb);
 }
 
-Entry.GReader = function() {
-    return require('../services/class.greader.js');
+Entry.GReader = function(session) {
+    var GReader = require('../services/class.greader.js');
+    return new GReader(session);
 }
 
 Entry.prototype.id = function(id) {

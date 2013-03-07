@@ -1,5 +1,4 @@
-var GReader =   require('../services/class.greader.js'),
-    OAuth =     require('../services/GoogleOAuth');
+var OAuth =     require('../services/GoogleOAuth');
 
 var GOOGLE_READER_API_URL = "http://www.google.com/reader/api/";
 
@@ -14,13 +13,10 @@ exports.welcome = function(req, res) {
 exports.oauth2callback = function(req, res) {
     var oauth = newOAuth();
 
-    oauth.getGoogleAccessToken(req.query, function(err, access_token, refresh_token) {
+    oauth.getGoogleAccessToken(req.query, function(err, accessToken, refreshToken) {
         if (err) return res.send(500, err);
-        
-        req.session.access_token = access_token;
-        req.session.refresh_token = refresh_token;
-        GReader.setAuthToken(access_token);
-        GReader.setSessionToken(refresh_token);
+        req.session.accessToken = accessToken;
+        req.session.refreshToken = refreshToken;
         return res.redirect('/view/feeds');
     });
 }
@@ -33,13 +29,10 @@ exports.authentication = function(req, res) {
             return (err) ? res.send(500, err) : res.redirect(redirectUrl);
   	    });
 	} else {
-	    oauth.getGoogleAccessToken(req.query, function(err, access_token, refresh_token) {
+	    oauth.getGoogleAccessToken(req.query, function(err, accessToken, refreshToken) {
             if (err) return res.send(500, err);
-            
-            req.session.access_token = access_token;
-            req.session.refresh_token = refresh_token;
-            GReader.setAuthToken(access_token);
-            GReader.setSessionToken(refresh_token);
+            req.session.accessToken = accessToken;
+            req.session.refreshToken = refreshToken;
             return res.redirect('/view/feeds');
   	    });
 	}

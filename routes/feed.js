@@ -5,7 +5,7 @@ var Feed = require('../models/class.feed.js');
  */
 
 exports.list = function(req, res) {
-    Feed.all(function(feeds) {
+    Feed.all(req.session, function(feeds) {
         res.render('feed/list', { feeds: feeds });
     });
 }
@@ -13,7 +13,7 @@ exports.list = function(req, res) {
 exports.get = function(req, res) {
     var id = encodeURIComponent(req.query['id']);
 
-    Feed.get(id, function(feed) {
+    Feed.get(id, req.session, function(feed) {
         res.render('feed/index', { feed: feed });
     });
 }

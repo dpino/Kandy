@@ -87,20 +87,21 @@ Feed.prototype.url = function(url) {
     return this;
 }
 
-Feed.all = function(cb) {
-    Feed.GReader().getFeeds(cb);
+Feed.all = function(session, cb) {
+    Feed.GReader(session).getFeeds(cb);
 }
 
-Feed.GReader = function() {
-    return require('../services/class.greader.js');
+Feed.GReader = function(session) {
+    var GReader = require('../services/class.greader.js');
+    return new GReader(session);
 }
 
 Feed.allUnreadUserFeeds = function() {
 
 }
 
-Feed.get = function(id, cb) {
-    Feed.GReader().getFeed(id, cb);
+Feed.get = function(id, session, cb) {
+    Feed.GReader(session).getFeed(id, cb);
 }
 
 module.exports = Feed;
