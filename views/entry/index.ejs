@@ -11,8 +11,13 @@
         <h1 style="margin-bottom: -15px">
             <a id="link" href="<%= entry.url() %>"><%- entry.title() ? entry.title() : "<i>No title</i>" %> »</a>
         </h1>
-        <h4>by <%= entry.author() %></h4>
-
+<%
+            if (entry.author()) {
+%>
+                <h4>by <%= entry.author() %></h4>
+<%
+            } 
+%>
         <div>
             <%- entry.content() %>
         </div>
