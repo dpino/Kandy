@@ -25,4 +25,18 @@
     </div>
 </body>
 
+<script type="text/javascript">
+    function markAsRead(feedId, entryId, accessToken) {
+        feedId = encodeURIComponent(feedId);
+        entryId = encodeURIComponent(entryId);
+        accessToken = encodeURIComponent(accessToken);
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', "/api/entry/markAsRead/" + feedId + "/" + entryId);
+        xhr.send(null);
+    }
+
+    window.addEventListener('load', markAsRead('<%= entry.feedId() %>', '<%= entry.id() %>')); 
+</script>
+
 </html>

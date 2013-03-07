@@ -1,13 +1,14 @@
 var dateFormat = require('dateformat');
 
-Entry.create = function(gEntry) {
-    return new Entry(gEntry);
+Entry.create = function(feedId, gEntry) {
+    return new Entry(feedId, gEntry);
 }
 
-function Entry(gEntry) {
+function Entry(feedId, gEntry) {
     this._id = gEntry.id;
 
     this._author = gEntry.author;
+    this._feedId = feedId;
     this._isFresh = getIsFresh(gEntry);
     this._content = getContent(gEntry);
     this._summary = getSummary(gEntry);
@@ -48,8 +49,8 @@ function getIsFresh(gEntry) {
     return true;
 }
 
-Entry.get = function(id, session, cb) {
-    return Entry.GReader(session).getEntry(id, cb);
+Entry.get = function(entryId, session, cb) {
+    return Entry.GReader(session).getEntry(entryId, cb);
 }
 
 Entry.GReader = function(session) {
@@ -57,11 +58,22 @@ Entry.GReader = function(session) {
     return new GReader(session);
 }
 
+Entry.markAsRead = function(req, cb) {
+    var feedId = req.params.feedId;
+    var entryId = req.params.entryId;
+
+    return Entry.GReader(req.session).markAsRead(feedId, entryId, req, cb);
+}
+
 Entry.prototype.id = function(id) {
     if (id === undefined) {
         return this._id;
     }
     this._id = id;
+}
+
+Entry.prototype.feedId = function() {
+    return this._feedId;
 }
 
 Entry.prototype.author = function(author) {

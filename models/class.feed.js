@@ -18,7 +18,7 @@ Feed.createFromGoogle = function(gFeed) {
 
     var entries = [];
     gFeed.items.forEach(function(gItem) {
-        entries.push(Entry.create(gItem));
+        entries.push(Entry.create(gFeed.id, gItem));
     });
     feed.entries(entries);
 
