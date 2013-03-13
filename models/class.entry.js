@@ -32,21 +32,16 @@ function getSummary(gEntry) {
     return stripHtmlTags(gEntry.summary ? gEntry.summary.content : "");
 }
 
-/**
- * FIXME:
- * Supposedly when an item is fresh it has a tag 'fresh' on its categories, but it's not correct
- * Still trying to figure out how to know if an item is fresh so temporarily leave it 'fresh' always
- */
 function getIsFresh(gEntry) {
-    /*
     if (gEntry.categories) {
-        gEntry.categories.forEach(function(category) {
-            if (category.match(/fresh$/)) return true;
-        });
+        for (var i = 0; i < gEntry.categories.length; i++) {
+            var category = gEntry.categories[i];
+            if (category.match("fresh$")) {
+                return true;   
+            }
+        }
     }
     return false;
-    */
-    return true;
 }
 
 Entry.get = function(entryId, session, cb) {

@@ -143,10 +143,11 @@ function toHashIndexedByTitle(array) {
 
 GReader.prototype.getFeed = function(feed_id, cb) {
     request({
-        url: this.getFeedContentsURI(feed_id )
+        url: this.getFeedContentsURI(feed_id)
     }, function(err, res, body) {
         assert.equal(err, null);
-        cb(getFeedDetails(body));
+        var gFeed = JSON.parse(body);
+        cb(getFeedDetails(gFeed));
     });
 }
 
@@ -155,8 +156,7 @@ GReader.prototype.getFeedContentsURI = function(feed_id) {
                 feed_id + '?r=n&n=20&access_token=' + this.accessToken;
 }
 
-function getFeedDetails(body) {
-    var gFeed = JSON.parse(body);
+function getFeedDetails(gFeed) {
     return Feed.createFromGoogle(gFeed);
 }
 
