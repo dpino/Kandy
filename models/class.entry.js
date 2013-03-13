@@ -22,7 +22,8 @@ function getUrlFor(gEntry) {
 }
 
 function getContent(gEntry) {
-    return gEntry.content ? gEntry.content.content : "";
+    return gEntry.content ? gEntry.content.content : 
+        gEntry.summary ? gEntry.summary.content : "";
 }
 
 function getSummary(gEntry) {
