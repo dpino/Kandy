@@ -7,7 +7,7 @@ Entry.create = function(feedId, gEntry) {
 function Entry(feedId, gEntry) {
     this._id = gEntry.id;
 
-    this._author = gEntry.author;
+    this._author = getAuthor(gEntry.author);
     this._feedId = feedId;
     this._isFresh = getIsFresh(gEntry);
     this._content = getContent(gEntry);
@@ -19,6 +19,15 @@ function Entry(feedId, gEntry) {
 
 function getUrlFor(gEntry) {
     return gEntry.alternate ? gEntry.alternate[0].href : "";
+}
+
+function getAuthor(author) {
+    author = trim(author);
+    return trim(author.replace(/^by/i, ""));
+}
+
+function trim(str) {
+    return str.replace(/^\s+|\s+$/, "");
 }
 
 function getContent(gEntry) {
