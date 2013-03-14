@@ -46,12 +46,12 @@ function getIsFresh(gEntry) {
     if (gEntry.categories) {
         for (var i = 0; i < gEntry.categories.length; i++) {
             var category = gEntry.categories[i];
-            if (category.match("fresh$")) {
-                return true;   
+            if (category.match("read$")) {
+                return false;   
             }
         }
     }
-    return false;
+    return true;
 }
 
 Entry.get = function(entryId, session, cb) {
@@ -68,6 +68,13 @@ Entry.markAsRead = function(req, cb) {
     var entryId = req.params.entryId;
 
     return Entry.GReader(req.session).markAsRead(feedId, entryId, req, cb);
+}
+
+Entry.removeFreshTag = function(req, cb) {
+    var feedId = req.params.feedId;
+    var entryId = req.params.entryId;
+
+    return Entry.GReader(req.session).removeFreshTag(feedId, entryId, req, cb);
 }
 
 Entry.prototype.id = function(id) {

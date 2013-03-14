@@ -12,7 +12,5 @@ exports.get = function(req, res) {
 }
 
 exports.markAsRead = function(req, res) {
-    Entry.markAsRead(req, function() {
-        console.log('marked as read');
-    });
+    Entry.markAsRead(req);
 }

@@ -2,7 +2,8 @@ var request = require('request'),
     assert = require('assert'),
     async = require('async'),
     Feed = require('../models/class.feed.js'),
-    Entry = require('../models/class.entry.js');
+    Entry = require('../models/class.entry.js'),
+    Tag = require('./class.tag.js');
 
 function GReader(session) {
     this.accessToken = session.accessToken;
@@ -183,18 +184,15 @@ GReader.prototype.getItemContentsURI = function(entryId)  {
                 entryId + '&access_token=' + GReader.accessToken;
 }
 
-GReader.states = {
-    READ: 'user/-/state/com.google/read'
-}
-
 GReader.prototype.markAsRead = function(feedId, entryId, req, cb) {
-    this.addState(GReader.states.READ, feedId, entryId, req, cb);
+    this.addState(Tag.states.READ, feedId, entryId, req, cb);
 }
 
 GReader.prototype.addState = function(state, feedId, entryId, req, cb) {
-    var accessToken = this.accessToken || req.session.accessToken;
-    // FIXME: No matter what, after retrieving the actionToken is not permanently stored in the session
-    var actionToken = this.actionToken || req.session.actionToken;
+    var greader = this;
+
+    var accessToken = greader.accessToken || req.session.accessToken;
+    var actionToken = greader.actionToken || req.session.actionToken;
 
     async.series([
             function(callback) {
@@ -202,55 +200,91 @@ GReader.prototype.addState = function(state, feedId, entryId, req, cb) {
                     getActionToken(accessToken, callback);
                 }
             },
-    ], function (err, result) {
-        var actionToken = req.session.actionToken;
-        this.actionToken = actionToken;
-        var params = encodeParams(state, feedId, entryId, actionToken, accessToken);
+    ], function (err, results) {
+        var actionToken = results[0];
+        saveActionToken(actionToken);
 
-        request.post({
-            url: getEditTagUri(accessToken),
-            headers: {
-                'Content-Type' : 'application/x-www-form-urlencoded',
-                'Content-Length': params.length,
-            },
-            body: params
-        }, function(err, res, body) {
-            if (cb) cb(body);
-        });
+        greader.changeState(
+            buildAddTagParams(state, feedId, entryId, accessToken, actionToken), cb);
     });
 
-    function getActionToken(accessToken, callback) {
-        request({
-            url: actionTokenUrl(accessToken)
-        }, function(err, res, body) {
-            req.session.actionToken = body;
-            callback(body);
-        });
-
-        function actionTokenUrl(accessToken) {
-            return 'https://www.google.com/reader/api/0/token?access_token=' + accessToken;
-        }
+    function buildAddTagParams(state, feedId, entryId, accessToken, actionToken) {
+        var tag = Tag.create(state, feedId, entryId, accessToken, actionToken);
+        return tag.getAddParams();
     }
 
-    function encodeParams(state, feedId, entryId, actionToken, accessToken) {
-        var data = {
-            a: state,
-            s: feedId,
-            i: entryId,
-            async: "true",
-            T: actionToken,
-        }
-        var params = [];
-        for (var key in data) {
-            params.push(key + '=' + data[key]);
-        }
-        return params.join('&');
+    function saveActionToken(actionToken) {
+        req.session.actionToken = actionToken;
+        greader.actionToken = actionToken;
     }
+}
+
+GReader.prototype.changeState = function(params, cb) {
+    var accessToken = this.accessToken;
+
+    request.post({
+        url: getEditTagUri(accessToken),
+        headers: {
+            'Content-Type' : 'application/x-www-form-urlencoded',
+            'Content-Length': params.length,
+        },
+        body: params
+    }, function(err, res, body) {
+        if (cb) cb(body);
+    });
 
     function getEditTagUri(accessToken) {
         return 'http://www.google.com/reader/api/0/edit-tag?access_token=' + accessToken;
     }
+}
 
+GReader.prototype.removeFreshTag = function(feedId, entryId, req, cb) {
+    this.removeState(Tag.states.FRESH, feedId, entryId, req, cb);
+}
+
+GReader.prototype.removeState = function(state, feedId, entryId, req, cb) {
+    var greader = this;
+
+    var accessToken = greader.accessToken || req.session.accessToken;
+    var actionToken = greader.actionToken || req.session.actionToken;
+
+    async.series([
+            function(callback) {
+                if (actionToken == undefined) {
+                    getActionToken(accessToken, callback);
+                } else {
+                    callback(null, actionToken);
+                }
+            },
+    ], function (err, results) {
+        var actionToken = results[0];
+        saveActionToken(actionToken);
+
+        var params = buildRemoveTagParams(state, feedId, entryId, accessToken, actionToken);
+        greader.changeState(params, cb);
+    });
+
+    function buildRemoveTagParams(state, feedId, entryId, accessToken, actionToken) {
+        var tag = Tag.create(state, feedId, entryId, accessToken, actionToken);
+        return tag.getRemoveParams();
+    }
+
+    function saveActionToken(actionToken) {
+        req.session.actionToken = actionToken;
+        greader.actionToken = actionToken;
+    }
+}
+
+function getActionToken(accessToken, callback) {
+    request({
+        url: actionTokenUrl(accessToken)
+    }, function(err, res, body) {
+        callback(null, body);
+    });
+
+    function actionTokenUrl(accessToken) {
+        return 'https://www.google.com/reader/api/0/token?access_token=' + accessToken;
+    }
 }
 
 module.exports = GReader;
