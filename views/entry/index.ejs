@@ -16,8 +16,13 @@
 %>
                 <h4>by <%= entry.author() %></h4>
 <%
-            } 
+            } else {
 %>
+                <br/>
+<%
+            }
+%>
+
         <div>
             <%- entry.content() %>
         </div>
