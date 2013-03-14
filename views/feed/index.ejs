@@ -33,7 +33,7 @@
 %>
                 <li class="<%= classRead %>">
                     <a class="entry-link" href="/view/entry?id=<%= encodeURIComponent(entry.id()) %>"
-                            title="<%= entry.title() %>" alt="<%= entry.summary() %>"><% 
+                            title="<%= entry.title() %>" alt="<%= entry.shortSummary() %>"><% 
                     if (entry.title()) { %>
                         <%= entry.strTitle() %><% 
                     } else { %>

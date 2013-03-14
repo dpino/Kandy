@@ -34,6 +34,7 @@ ContextMenu.prototype.display = function(title, summary, pos_y) {
     function format() {
         return summary ? "<b>" + title + "</b>" + "<br/><br/>" + summary : title;
     }
+
 }
 
 ContextMenu.trim = function(str) {

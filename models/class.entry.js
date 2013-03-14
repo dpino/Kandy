@@ -131,6 +131,18 @@ Entry.prototype.summary = function(summary) {
     this._summary = summary;
 }
 
+Entry.prototype.shortSummary = function(summary){
+    var MAX_CHAR_SUMMARY = 194;
+
+    if (!this._summary) return "";
+
+    var result = this._summary.substr(0, MAX_CHAR_SUMMARY);
+    if (this._summary.length > MAX_CHAR_SUMMARY + 3) {
+        result += "...";
+    }
+    return result;
+}
+
 Entry.prototype.content = function(content) {
     if (content === undefined) {
         return this._content;
