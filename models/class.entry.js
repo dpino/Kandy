@@ -22,12 +22,11 @@ function getUrlFor(gEntry) {
 }
 
 function getAuthor(author) {
-    author = trim(author);
-    return trim(author.replace(/^by/i, ""));
+    return author ? trim(author.replace(/^by /i, "")) : "";
 }
 
 function trim(str) {
-    return str.replace(/^\s+|\s+$/, "");
+    return str ? str.replace(/^\s+|\s+$/, "") : "";
 }
 
 function getContent(gEntry) {
