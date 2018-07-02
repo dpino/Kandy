@@ -8,16 +8,16 @@
   "dependencies": {
     "async": "0.1.18",
     "dateformat": "1.0.4-1.2.3",
-    "ejs": "0.8.3",
+    "ejs": "2.5.5",
     "express": "3.1.0",
     "hat": "0.0.3",
     "memory-cache": "0.0.2",
     "oauth": "0.9.7",
-    "request": "2.14.0",
+    "request": "^2.87.0",
     "restler": "2.0.1"
   },
   "engines": {
     "node": "0.6.20",
-    "npm":  "1.1.4"
+    "npm": "1.1.4"
   }
 }
