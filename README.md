@@ -1,3 +1,5 @@
+NOTE: Since Google Reader was shut down this software has no longer any practical use.
+
 What is Kandy?
 ==============
 
